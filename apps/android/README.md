@@ -19,6 +19,7 @@ cd apps/android
 
 Gradle 自动编译两个 ABI 的 Rust 动态库并打包现有产品数据：`assets/lexicon/dict.tsv`、`english.tsv`、`assets/glossary/glossary-en.tsv`。
 输出为 `app/build/outputs/apk/debug/app-debug.apk`，开发签名，可安装测试；发布需单独配置签名。
+当前基础版以开发签名预发布到 GitHub Releases。推送与 `versionName` 一致的 `android-v*` 标签（如 `android-v0.1.0-dev`）会触发 `.github/workflows/android-release.yml`，执行 Rust 测试、APK 构建、Lint、签名和 ZIP 对齐校验，再上传 APK 与 `SHA256SUMS`。该流程只发布 Android 预发布版本。开发签名每次构建可能变化，重新安装可能需先卸载；正式版需配置长期维护的发布签名。
 Rust 交叉编译脚本也可以通过 `ANDROID_NDK_HOME` 指定 NDK；Gradle 只配 `local.properties` 时，还须把这个变量提供给 Rust 脚本。
 安装时以 APK 版本号区分静态数据目录，升级不会覆盖独立的学习目录。修改打包数据后调试，需递增 `versionCode` 或清除应用数据。
 
