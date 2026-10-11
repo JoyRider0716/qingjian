@@ -5,13 +5,13 @@
 ```text
                     Qingjian Core
                          │
-        ┌────────────────┼────────────────┐
-        ▼                ▼                ▼
-   macOS Adapter    Windows Adapter    Linux Adapter
-       IMK               TSF          IBus / Fcitx
-        │                │                │
-        ▼                ▼                ▼
-  Candidate UI      Candidate UI      Candidate UI
+        ┌────────────────┼────────────────┬────────────────┐
+        ▼                ▼                ▼                ▼
+   macOS Adapter    Windows Adapter    Linux Adapter    Android Adapter
+       IMK               TSF             Fcitx5       InputMethodService
+        │                │                │                │
+        ▼                ▼                ▼                ▼
+  Candidate UI      Candidate UI      Candidate UI     Touch Keyboard
 ```
 
 词库、拼音解析、候选生成、排序、用户词频学习和翻译能力全部属于 Core。
@@ -54,7 +54,8 @@ qingjian/
 │   ├── macos/                  # IMK 输入法壳（app / host / imk / candidates / menubar / preferences）
 │   ├── windows/                # 同一个产品的四个 package：server（IPC 分派 + Engine + 命名管道 + 自绘候选窗）、
 │   │                           #   tsf（TSF 文本服务 DLL：COM 链路 + 连 Server 的管道客户端）、settings（WinUI 3）、installer
-│   └── linux/                  # server（Engine + Unix socket）+ fcitx5（C++ 插件）+ scripts
+│   ├── linux/                  # server（Engine + Unix socket）+ fcitx5（C++ 插件）+ scripts
+│   └── android/                # Java InputMethodService / 触屏键盘 + Rust JNI native；见 design/android.md
 │
 ├── tools/
 │   ├── dict-convert/           # 产品数据生成：lexicon / bigram / mine / english / emoji / pack

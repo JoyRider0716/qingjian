@@ -7,6 +7,8 @@ description: 青简在 macOS 与 Windows 上的全部按键与缺省快捷键：
 两个平台功能相同，按键按各自系统的习惯设计。表中 `⌥` 为 Option，`⌘` 为 Command，`⌃` 为 Control，`⇧` 为 Shift；
 「—」表示该平台没有此键。
 
+Android 基础版使用触屏键盘，按键说明见 [Android 基础版](android.md#使用键盘)。
+
 ## 切换模式
 
 | 操作 | macOS | Windows |

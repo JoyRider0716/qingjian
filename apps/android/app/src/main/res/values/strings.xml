@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="subtype_name">中文全拼</string>
+    <string name="keyboard_status">青简 · %1$s%2$s</string>
+    <string name="direct_mode">英文 / 数字</string>
+    <string name="pinyin_mode">中文全拼</string>
+    <string name="no_learning_suffix"> · 不记录学习</string>
+    <string name="app_version">Android 基础版 %1$s · GPL-3.0-or-later</string>
+</resources>

@@ -342,6 +342,16 @@ DLL 不读文件、不查 mtime。`SessionOpened` 只回过协议版本对得上
   `--stroke` / `--dict` / `--output` 改路径，元数据缺省「笔画」/ `OFL-1.1` / CNS11643 数位发展部署名（可覆盖），数据版本取笔画表日期。
   2026-09-20 实测：词库 92,821 词条 / 91,904 词，有码 91,773、无码跳过 131，码表 91,773 条 / 3.0 MB。
 
+## apps/android
+
+Android 原生键盘位于 `apps/android/app`，Rust JNI crate 为 `qingjian-android`（`apps/android/native`）。
+`Session` 装配 `Dictionary`、`Glossary`、`FrequencyLearner` 和可选 `WordList`，通过 `Engine` 处理输入；不重复实现排序。
+JNI 线程局部注册表保留会话，Java 单线程工作队列调用；显示帧包含 revision、剩余拼音、提交文本、候选与英文释义。
+候选上限 40、输入上限 96 字母。包内使用产品 TSV 数据，复制到应用私有目录；用户学习目录独立，关闭备份。
+密码字段直输，禁止学习字段设置 `Engine::set_private`；没有网络、输入日志或神经模型。
+Gradle 自动执行 `scripts/build-native.sh` 打包 ARM64 / x86_64，API 26 起，动态库 16 KiB 页对齐。
+详见 `apps/android/README.md` 与 `docs/design/android.md`。
+
 ## apps/linux
 
 `qingjian-linux-server` 为独立产品 `0.1.0-dev`，装配本地 Engine、词库、释义、频率学习、个人 n-gram、词汇记录与可选输入日志，

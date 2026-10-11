@@ -1,0 +1,23 @@
+[package]
+name = "qingjian-android"
+description = "Android 输入法的 JNI 桥接与本地引擎装配"
+version = "0.1.0-dev"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+qingjian-core.workspace = true
+qingjian-dictionary.workspace = true
+qingjian-translate.workspace = true
+qingjian-learning.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+jni = "0.21.1"
+
+[lints]
+workspace = true

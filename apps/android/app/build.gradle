@@ -1,0 +1,61 @@
+plugins { id 'com.android.application' }
+
+android {
+    useLibrary 'android.test.runner', false
+    useLibrary 'android.test.base', false
+    namespace 'app.qingjian.android'
+    compileSdk 35
+    ndkVersion '27.2.12479018'
+    buildFeatures { buildConfig true }
+
+    defaultConfig {
+        applicationId 'app.qingjian.android'
+        minSdk 26
+        targetSdk 35
+        versionCode 1
+        versionName '0.1.0-dev'
+        testInstrumentationRunner 'android.test.InstrumentationTestRunner'
+        ndk { abiFilters 'arm64-v8a', 'x86_64' }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDir layout.buildDirectory.dir('generated/jniLibs')
+            assets.srcDir layout.buildDirectory.dir('generated/assets')
+        }
+    }
+    packaging { jniLibs { useLegacyPackaging = false } }
+}
+
+def repositoryRoot = rootProject.projectDir.parentFile.parentFile
+def sdkDirectory = providers.environmentVariable('ANDROID_HOME')
+    .orElse(providers.environmentVariable('ANDROID_SDK_ROOT'))
+
+tasks.register('buildRust', Exec) {
+    workingDir repositoryRoot
+    commandLine 'bash', 'apps/android/scripts/build-native.sh', layout.buildDirectory.dir('generated/jniLibs').get().asFile.absolutePath
+    if (sdkDirectory.isPresent()) {
+        environment 'ANDROID_NDK_HOME', "${sdkDirectory.get()}/ndk/27.2.12479018"
+    }
+    inputs.files(fileTree(new File(repositoryRoot, 'crates')) { include '**/*.rs', '**/Cargo.toml' })
+    inputs.files(fileTree(new File(rootProject.projectDir, 'native')) { include '**/*.rs', 'Cargo.toml' })
+    inputs.files(new File(repositoryRoot, 'Cargo.toml'), new File(repositoryRoot, 'Cargo.lock'), new File(rootProject.projectDir, 'scripts/build-native.sh'))
+    outputs.dir layout.buildDirectory.dir('generated/jniLibs')
+}
+
+tasks.register('prepareData', Copy) {
+    into layout.buildDirectory.dir('generated/assets/qingjian')
+    from(new File(repositoryRoot, 'assets/lexicon')) { include 'dict.tsv', 'english.tsv' }
+    from(new File(repositoryRoot, 'assets/glossary')) { include 'glossary-en.tsv' }
+    from(repositoryRoot) { include 'LICENSE' }
+    from(new File(repositoryRoot, 'assets/lexicon')) { include 'QINGJIAN.md', 'README.md' }
+    from(new File(repositoryRoot, 'assets/glossary')) {
+        include 'README.md'
+        rename 'README.md', 'glossary-sources.md'
+    }
+}
+
+tasks.named('preBuild') { dependsOn 'buildRust', 'prepareData' }
